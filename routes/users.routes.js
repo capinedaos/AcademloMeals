@@ -2,7 +2,7 @@ const express = require('express');
 
 // Controllers
 const {
-	getAllUsers,
+	getAllOrders,
 	createUser,
 	getUserById,
 	updateUser,
@@ -29,7 +29,7 @@ usersRouter.post('/login', login);
 
 usersRouter.use(protectSession);
 
-usersRouter.get('/', getAllUsers);
+usersRouter.get('/', getAllOrders);
 
 usersRouter
 	.use('/:id', userExists)
