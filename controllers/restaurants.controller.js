@@ -24,6 +24,7 @@ const createRestaurant = catchAsync(async (req, res, next) => {
 const getAllRestaurants = catchAsync(async (req, res, next) => {
   const restaurants = await Restaurant.findAll({
     where: { status: 'active' },
+    include: [{ model: Review }],
   });
 
   res.status(201).json({
@@ -84,17 +85,24 @@ const createReview = catchAsync(async (req, res, next) => {
   const { restaurant, sessionUser } = req;
   const { comment, rating } = req.body;
 
-  const newReview = await Review.create({
-    comment,
-    rating,
-    restaurantId: restaurant.id,
-    userId: sessionUser.id,
-  });
+  const idRestaurant = restaurant.id;
+  const idUser = sessionUser.id;
 
-  res.status(201).json({
-    status: 'success',
-    newReview,
-  });
+  if (rating < 1 || rating > 10) {
+    return next(new AppError('rating must be between 1-10', 400));
+  } else {
+    const newReview = await Review.create({
+      userId: idUser,
+      comment,
+      restaurantId: idRestaurant,
+      rating,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      newReview,
+    });
+  }
 });
 
 const updateReview = catchAsync(async (req, res, next) => {

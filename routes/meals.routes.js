@@ -13,6 +13,7 @@ const {
 const {
   createMealValidators,
 } = require('../middlewares/validators.middleware');
+const { restaurantExists } = require('../middlewares/restaurants.middleware');
 
 const { mealExists } = require('../middlewares/meals.middleware');
 
@@ -26,7 +27,7 @@ mealsRouter.get('/:id', mealExists, getAllMealById);
 
 mealsRouter.use(protectSession);
 
-mealsRouter.post('/', createMealValidators, createMeal);
+mealsRouter.post('/:id', restaurantExists, createMealValidators, createMeal);
 
 mealsRouter
   .use('/:id', mealExists)

@@ -32,18 +32,18 @@ restaurantsRouter.use(protectSession);
 
 restaurantsRouter.post('/', createRestaurantValidators, createRestaurant);
 
+restaurantsRouter.post(
+  '/reviews/:id',
+  createReviewValidators,
+  restaurantExists,
+  createReview
+);
+
 restaurantsRouter
   .use('/:id', restaurantExists)
   .route('/:id')
   .patch(updateRestaurant)
   .delete(deteleRestaurant);
-
-restaurantsRouter.post(
-  '/reviews/:restaurantId',
-  createReviewValidators,
-  restaurantExists,
-  createReview
-);
 
 restaurantsRouter
   .use('/reviews/:id', reviewExists)
