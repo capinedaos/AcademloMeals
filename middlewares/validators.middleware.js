@@ -28,6 +28,53 @@ const createUserValidators = [
   checkResult,
 ];
 
+const createOrderValidators = [
+  body('totalPrice')
+    .notEmpty()
+    .withMessage('totalPrice cannot be empty')
+    .isNumeric()
+    .withMessage('totalPrice is not a number'),
+  body('quantity')
+    .notEmpty()
+    .withMessage('quantity cannot be empty')
+    .isNumeric()
+    .withMessage('quantity is not a number'),
+  checkResult,
+];
+
+const createMealValidators = [
+  body('name')
+    .notEmpty()
+    .withMessage('name cannot be empty')
+    .isString()
+    .withMessage('name is not a string'),
+  body('price')
+    .notEmpty()
+    .withMessage('price cannot be empty')
+    .isNumeric()
+    .withMessage('price is not a number'),
+  checkResult,
+];
+
+const createRestaurantValidators = [
+  body('name')
+    .notEmpty()
+    .withMessage('name cannot be empty')
+    .isString()
+    .withMessage('name is not a string'),
+  body('address')
+    .notEmpty()
+    .withMessage('address cannot be empty')
+    .isString()
+    .withMessage('address is not a string'),
+  body('rating')
+    .notEmpty()
+    .withMessage('rating cannot be empty')
+    .isNumeric()
+    .withMessage('rating is not a number'),
+  checkResult,
+];
+
 const createReviewValidators = [
   body('comment')
     .notEmpty()
@@ -39,5 +86,8 @@ const createReviewValidators = [
 
 module.exports = {
   createUserValidators,
+  createOrderValidators,
+  createMealValidators,
+  createRestaurantValidators,
   createReviewValidators,
 };

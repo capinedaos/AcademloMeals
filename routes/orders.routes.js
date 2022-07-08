@@ -9,7 +9,9 @@ const {
 } = require('../controllers/orders.controller');
 
 // Middlewares
-const { createOrderValidators } = require('../middlewares/orders.middleware');
+const {
+  createOrderValidators,
+} = require('../middlewares/validators.middleware');
 
 const { orderExists } = require('../middlewares/orders.middleware');
 
@@ -19,11 +21,7 @@ const ordersRouter = express.Router();
 
 ordersRouter.use(protectSession);
 
-ordersRouter.post(
-  '/',
-  //  createOrderValidators,
-  createOrder
-);
+ordersRouter.post('/', createOrderValidators, createOrder);
 
 ordersRouter.get('/me', getAllOrders);
 

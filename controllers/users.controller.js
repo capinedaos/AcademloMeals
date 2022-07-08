@@ -74,28 +74,38 @@ const updateUser = catchAsync(async (req, res, next) => {
 
   await user.update({ name, email });
 
-  res.status(204).json({ status: 'success' });
+  res.status(201).json({ status: 'success', user });
 });
 
 const deleteUser = catchAsync(async (req, res, next) => {
   const { user } = req;
 
-  // await user.destroy();
   await user.update({ status: 'inactive' });
 
-  res.status(204).json({ status: 'success' });
+  res.status(201).json({ status: 'success', user });
 });
 
 const getAllOrders = catchAsync(async (req, res, next) => {
-  
-  const user = await User.findAll({
-    where: { status: 'active' },
+  const { sessionUser } = req;
+  const id = sessionUser.id;
+
+  const user = await User.findOne({
+    where: { status: 'active', id },
     include: [{ model: Order }],
   });
 
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     user,
+  });
+});
+
+const getOrderById = catchAsync(async (req, res, next) => {
+  const { order } = req;
+
+  res.status(201).json({
+    status: 'success',
+    order,
   });
 });
 
@@ -105,4 +115,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getAllOrders,
+  getOrderById,
 };
