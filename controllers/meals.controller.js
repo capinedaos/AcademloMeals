@@ -5,7 +5,6 @@ const { Meal } = require('../models/meal.model');
 const { catchAsync } = require('../utils/catchAsync.util');
 
 const createMeal = catchAsync(async (req, res, next) => {
-
   const { restaurant } = req;
   const { name, price } = req.body;
 
@@ -33,7 +32,6 @@ const getAllMeals = catchAsync(async (req, res, next) => {
 });
 
 const getAllMealById = catchAsync(async (req, res, next) => {
-  
   const { meal } = req;
 
   res.status(201).json({
@@ -43,15 +41,29 @@ const getAllMealById = catchAsync(async (req, res, next) => {
 });
 
 const updateMeal = catchAsync(async (req, res, next) => {
-  const { meal } = req;
+  const { meal, sessionUser } = req;
   const { name, price } = req.body;
-  await meal.update({ name, price });
+  const role = sessionUser.role;
+
+  if (role === 'admin') {
+    await meal.update({ name, price });
+  } else {
+    return next(new AppError('admin permission required', 400));
+  }
+
   res.status(201).json({ status: 'success', meal });
 });
 
 const deteleMeal = catchAsync(async (req, res, next) => {
-  const { meal } = req;
-  await meal.update({ status: 'deleted' });
+  const { meal, sessionUser } = req;
+  const role = sessionUser.role;
+
+  if (role === 'admin') {
+    await meal.update({ status: 'deleted' });
+  } else {
+    return next(new AppError('admin permission required', 400));
+  }
+
   res.status(201).json({ status: 'success', meal });
 });
 

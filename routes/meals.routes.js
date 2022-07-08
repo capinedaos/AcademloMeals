@@ -21,7 +21,8 @@ const { protectSession } = require('../middlewares/auth.middleware');
 const mealsRouter = express.Router();
 
 mealsRouter.get('/', getAllMeals);
-mealsRouter.get('/:id', getAllMealById);
+
+mealsRouter.get('/:id', mealExists, getAllMealById);
 
 mealsRouter.use(protectSession);
 

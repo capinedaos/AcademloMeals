@@ -1,5 +1,6 @@
 // Models
 const { Restaurant } = require('../models/restaurant.model');
+const { Review } = require('../models/review.model');
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util');
@@ -33,10 +34,20 @@ const getAllRestaurants = catchAsync(async (req, res, next) => {
 
 const getRestaurantById = catchAsync(async (req, res, next) => {
   const { restaurant } = req;
+  const id = restaurant.id;
+
+  const restaurantId = await Restaurant.findOne({
+    where: { status: 'active', id },
+    include: [
+      {
+        model: Review,
+      },
+    ],
+  });
 
   res.status(201).json({
     status: 'success',
-    restaurant,
+    restaurantId,
   });
 });
 
@@ -44,9 +55,9 @@ const updateRestaurant = catchAsync(async (req, res, next) => {
   const { restaurant, sessionUser } = req;
   const { name, address } = req.body;
 
-  const status = sessionUser.status;
+  const role = sessionUser.role;
 
-  if (status === 'admin') {
+  if (role === 'admin') {
     await restaurant.update({ name, address });
   } else {
     return next(new AppError('admin permission required', 400));
@@ -58,9 +69,9 @@ const updateRestaurant = catchAsync(async (req, res, next) => {
 const deteleRestaurant = catchAsync(async (req, res, next) => {
   const { restaurant, sessionUser } = req;
 
-  const status = sessionUser.status;
+  const role = sessionUser.role;
 
-  if (status === 'admin') {
+  if (role === 'admin') {
     await restaurant.update({ status: 'disabled' });
   } else {
     return next(new AppError('admin permission required', 400));
@@ -69,12 +80,45 @@ const deteleRestaurant = catchAsync(async (req, res, next) => {
   res.status(201).json({ status: 'success', restaurant });
 });
 
-const createReview = catchAsync(async (req, res, next) => {});
+const createReview = catchAsync(async (req, res, next) => {
+  const { restaurant, sessionUser } = req;
+  const { comment, rating } = req.body;
 
-const updateReview = catchAsync(async (req, res, next) => {});
+  const newReview = await Review.create({
+    comment,
+    rating,
+    restaurantId: restaurant.id,
+    userId: sessionUser.id,
+  });
 
-const deleteReview = catchAsync(async (req, res, next) => {});
+  res.status(201).json({
+    status: 'success',
+    newReview,
+  });
+});
 
+const updateReview = catchAsync(async (req, res, next) => {
+  const { review, sessionUser } = req;
+  const { comment, rating } = req.body;
+
+  if (sessionUser.id === review.userId) {
+    await review.update({ comment, rating });
+  } else {
+    return next(new AppError('not the author of the review', 400));
+  }
+  res.status(201).json({ status: 'success', review });
+});
+
+const deleteReview = catchAsync(async (req, res, next) => {
+  const { review, sessionUser } = req;
+
+  if (sessionUser.id === review.userId) {
+    await review.update({ status: 'deleted' });
+  } else {
+    return next(new AppError('not the author of the review', 400));
+  }
+  res.status(201).json({ status: 'success', review });
+});
 
 module.exports = {
   createRestaurant,

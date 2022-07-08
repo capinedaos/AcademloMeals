@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 // Models
 const { User } = require('../models/user.model');
 const { Order } = require('../models/order.model');
+const { Meal } = require('../models/meal.model');
+const { Restaurant } = require('../models/restaurant.model');
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util');
@@ -13,7 +15,7 @@ const { AppError } = require('../utils/appError.util');
 dotenv.config({ path: './config.env' });
 
 const createUser = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Hash password
   const salt = await bcrypt.genSalt(12);
@@ -23,6 +25,7 @@ const createUser = catchAsync(async (req, res, next) => {
     name,
     email,
     password: hashPassword,
+    role,
   });
 
   // Remove password from response
@@ -91,7 +94,12 @@ const getAllOrders = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({
     where: { status: 'active', id },
-    include: [{ model: Order }],
+    include: [
+      {
+        model: Order,
+        include: { model: Meal, include: { model: Restaurant } },
+      },
+    ],
   });
 
   res.status(201).json({

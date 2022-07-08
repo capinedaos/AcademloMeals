@@ -18,13 +18,23 @@ const checkResult = (req, res, next) => {
 };
 
 const createUserValidators = [
-  body('name').notEmpty().withMessage('Name cannot be empty'),
+  body('name')
+    .notEmpty()
+    .withMessage('Name cannot be empty')
+    .isString()
+    .withMessage('Name is not a string'),
   body('email').isEmail().withMessage('Must provide a valid email'),
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long')
     .isAlphanumeric()
     .withMessage('Password must contain letters and numbers'),
+  body('role')
+    .notEmpty()
+    .withMessage('Role cannot be empty')
+    .isString()
+    .withMessage('Role is not a string'),
+
   checkResult,
 ];
 
@@ -81,6 +91,11 @@ const createReviewValidators = [
     .withMessage('Comment cannot be empty')
     .isString()
     .withMessage('Comment must be a string'),
+  body('rating')
+    .notEmpty()
+    .withMessage('rating cannot be empty')
+    .isNumeric()
+    .withMessage('rating is not a number'),
   checkResult,
 ];
 

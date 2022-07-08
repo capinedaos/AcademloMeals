@@ -26,7 +26,7 @@ const { protectSession } = require('../middlewares/auth.middleware');
 const restaurantsRouter = express.Router();
 
 restaurantsRouter.get('/', getAllRestaurants);
-restaurantsRouter.get('/:id', getRestaurantById);
+restaurantsRouter.get('/:id', restaurantExists, getRestaurantById);
 
 restaurantsRouter.use(protectSession);
 
@@ -41,6 +41,7 @@ restaurantsRouter
 restaurantsRouter.post(
   '/reviews/:restaurantId',
   createReviewValidators,
+  restaurantExists,
   createReview
 );
 

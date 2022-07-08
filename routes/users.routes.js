@@ -16,6 +16,7 @@ const {
 } = require('../middlewares/validators.middleware');
 
 const { userExists } = require('../middlewares/users.middleware');
+const { orderExists } = require('../middlewares/orders.middleware');
 
 const {
   protectSession,
@@ -31,7 +32,7 @@ usersRouter.post('/login', login);
 usersRouter.use(protectSession);
 
 usersRouter.get('/orders', getAllOrders);
-usersRouter.get('/orders/:id', getOrderById);
+usersRouter.get('/orders/:id', orderExists, getOrderById);
 
 usersRouter
   .use('/:id', userExists)
