@@ -3,6 +3,7 @@ const { Order } = require('../models/order.model');
 const { User } = require('../models/user.model');
 const { Meal } = require('../models/meal.model');
 const { Restaurant } = require('../models/restaurant.model');
+const { AppError } = require('../utils/appError.util');
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util');
@@ -34,7 +35,7 @@ const getAllOrders = catchAsync(async (req, res, next) => {
   const { sessionUser } = req;
 
   const order = await Order.findAll({
-    where: { status: 'active', userId: sessionUser.id },
+    where: { userId: sessionUser.id },
     include: [{ model: Meal }],
   });
 
@@ -48,7 +49,11 @@ const completedOrder = catchAsync(async (req, res, next) => {
   const { order, sessionUser } = req;
 
   if (sessionUser.id === order.userId) {
-    await order.update({ status: 'completed' });
+    if (order.status === 'active') {
+      await order.update({ status: 'completed' });
+    } else {
+      return next(new AppError('the order is not active', 400));
+    }
   } else {
     return next(new AppError('not the author of the order', 400));
   }
@@ -60,7 +65,11 @@ const cancelledOrder = catchAsync(async (req, res, next) => {
   const { order, sessionUser } = req;
 
   if (sessionUser.id === order.userId) {
-    await order.update({ status: 'cancelled' });
+    if (order.status === 'active') {
+      await order.update({ status: 'cancelled' });
+    } else {
+      return next(new AppError('the order is not active', 400));
+    }
   } else {
     return next(new AppError('not the author of the order', 400));
   }

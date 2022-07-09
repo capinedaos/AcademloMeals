@@ -33,8 +33,8 @@ User.hasMany(Order, { foreignKey: 'userId' });
 Order.belongsTo(User);
 
 // 1 Meal <----> 1 Order
-//Meal.hasOne(Order, { foreignKey: 'orderId' });
-//Order.belongsTo(Meal);
+Meal.hasOne(Order, { foreignKey: 'orderId' });
+Order.belongsTo(Meal);
 
 // 1 Order <----> 1 Meal
 Order.hasOne(Meal, { foreignKey: 'mealId' });

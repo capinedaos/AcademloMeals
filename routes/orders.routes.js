@@ -14,6 +14,7 @@ const {
 } = require('../middlewares/validators.middleware');
 
 const { orderExists } = require('../middlewares/orders.middleware');
+const { mealExists } = require('../middlewares/meals.middleware');
 
 const { protectSession } = require('../middlewares/auth.middleware');
 
@@ -21,7 +22,7 @@ const ordersRouter = express.Router();
 
 ordersRouter.use(protectSession);
 
-ordersRouter.post('/', createOrderValidators, createOrder);
+ordersRouter.post('/', mealExists, createOrderValidators, createOrder);
 
 ordersRouter.get('/me', getAllOrders);
 
