@@ -8,6 +8,7 @@ const {
   updateUser,
   deleteUser,
   login,
+  getAllUsers,
 } = require('../controllers/users.controller');
 
 // Middlewares
@@ -39,5 +40,7 @@ usersRouter
   .route('/:id')
   .patch(protectUserAccount, updateUser)
   .delete(protectUserAccount, deleteUser);
+
+usersRouter.get('/', getAllUsers);
 
 module.exports = { usersRouter };

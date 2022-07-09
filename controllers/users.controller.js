@@ -71,6 +71,17 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.findAll({
+    where: { status: 'active' },
+  });
+
+  res.status(201).json({
+    status: 'success',
+    users,
+  });
+});
+
 const updateUser = catchAsync(async (req, res, next) => {
   const { user } = req;
   const { name, email } = req.body;
@@ -120,6 +131,7 @@ const getOrderById = catchAsync(async (req, res, next) => {
 module.exports = {
   createUser,
   login,
+  getAllUsers,
   updateUser,
   deleteUser,
   getAllOrders,
