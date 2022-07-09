@@ -7,7 +7,7 @@ const { catchAsync } = require('../utils/catchAsync.util');
 
 const mealExists = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-
+  
   const meal = await Meal.findOne({ where: { id, status: 'active' } });
 
   if (!meal) {

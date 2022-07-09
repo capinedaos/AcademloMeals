@@ -13,6 +13,7 @@ const createMeal = catchAsync(async (req, res, next) => {
     price,
     restaurantId: restaurant.id,
   });
+
   res.status(201).json({
     status: 'success',
     newMeal,

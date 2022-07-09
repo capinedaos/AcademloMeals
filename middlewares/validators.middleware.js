@@ -39,11 +39,11 @@ const createUserValidators = [
 ];
 
 const createOrderValidators = [
-  body('totalPrice')
+  body('mealId')
     .notEmpty()
-    .withMessage('totalPrice cannot be empty')
+    .withMessage('mealId cannot be empty')
     .isNumeric()
-    .withMessage('totalPrice is not a number'),
+    .withMessage('mealId is not a number'),
   body('quantity')
     .notEmpty()
     .withMessage('quantity cannot be empty')

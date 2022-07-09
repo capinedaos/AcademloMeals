@@ -85,16 +85,13 @@ const createReview = catchAsync(async (req, res, next) => {
   const { restaurant, sessionUser } = req;
   const { comment, rating } = req.body;
 
-  const idRestaurant = restaurant.id;
-  const idUser = sessionUser.id;
-
   if (rating < 1 || rating > 10) {
     return next(new AppError('rating must be between 1-10', 400));
   } else {
     const newReview = await Review.create({
-      userId: idUser,
+      userId: sessionUser.id,
       comment,
-      restaurantId: idRestaurant,
+      restaurantId: restaurant.id,
       rating,
     });
 
