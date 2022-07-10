@@ -105,10 +105,30 @@ const getAllOrders = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({
     where: { status: 'active', id },
+    attributes: ['id', 'name', 'email', 'status', 'role'],
     include: [
       {
         model: Order,
-        include: { model: Meal, include: { model: Restaurant } },
+        attributes: [
+          'id',
+          'mealId',
+          'userId',
+          'totalPrice',
+          'quantity',
+          'status',
+        ],
+        include: [
+          {
+            model: Meal,
+            attributes: ['id', 'name', 'price', 'restaurantId', 'status'],
+            include: [
+              {
+                model: Restaurant,
+                attributes: ['id', 'name', 'address', 'rating', 'status'],
+              },
+            ],
+          },
+        ],
       },
     ],
   });
@@ -121,10 +141,28 @@ const getAllOrders = catchAsync(async (req, res, next) => {
 
 const getOrderById = catchAsync(async (req, res, next) => {
   const { order } = req;
+  const id = order.id;
+
+  const orderId = await Order.findOne({
+    where: { status: 'active', id },
+    attributes: ['id', 'mealId', 'userId', 'totalPrice', 'quantity', 'status'],
+    include: [
+      {
+        model: Meal,
+        attributes: ['id', 'name', 'price', 'restaurantId', 'status'],
+        include: [
+          {
+            model: Restaurant,
+            attributes: ['id', 'name', 'address', 'rating', 'status'],
+          },
+        ],
+      },
+    ],
+  });
 
   res.status(201).json({
     status: 'success',
-    order,
+    orderId,
   });
 });
 

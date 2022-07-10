@@ -32,13 +32,9 @@ Review.belongsTo(User);
 User.hasMany(Order, { foreignKey: 'userId' });
 Order.belongsTo(User);
 
-// 1 Meal <----> 1 Order
-Meal.hasOne(Order, { foreignKey: 'orderId' });
-Order.belongsTo(Meal);
-
 // 1 Order <----> 1 Meal
-Order.hasOne(Meal, { foreignKey: 'mealId' });
-Meal.belongsTo(Order);
+Meal.hasOne(Order, { foreignKey: { name: 'mealId' } });
+Order.belongsTo(Meal);
 
 db.sync()
   .then(() => console.log('Db synced'))

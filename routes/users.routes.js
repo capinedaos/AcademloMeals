@@ -32,6 +32,8 @@ usersRouter.post('/login', login);
 
 usersRouter.use(protectSession);
 
+usersRouter.get('/', getAllUsers);
+
 usersRouter.get('/orders', getAllOrders);
 usersRouter.get('/orders/:id', orderExists, getOrderById);
 
@@ -40,7 +42,5 @@ usersRouter
   .route('/:id')
   .patch(protectUserAccount, updateUser)
   .delete(protectUserAccount, deleteUser);
-
-usersRouter.get('/', getAllUsers);
 
 module.exports = { usersRouter };

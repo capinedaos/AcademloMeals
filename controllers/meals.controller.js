@@ -4,6 +4,7 @@ const { Restaurant } = require('../models/restaurant.model');
 
 // Utils
 const { catchAsync } = require('../utils/catchAsync.util');
+const { AppError } = require('../utils/appError.util');
 
 const createMeal = catchAsync(async (req, res, next) => {
   const { restaurant } = req;
@@ -26,8 +27,15 @@ const getAllMeals = catchAsync(async (req, res, next) => {
     where: {
       status: 'active',
     },
-    include: [{ model: Restaurant }],
+    attributes: ['id', 'name', 'price', 'restaurantId', 'status'],
+    include: [
+      {
+        model: Restaurant,
+        attributes: ['id', 'name', 'address', 'rating', 'status'],
+      },
+    ],
   });
+
   res.status(201).json({
     status: 'success',
     meals,
@@ -41,7 +49,13 @@ const getAllMealById = catchAsync(async (req, res, next) => {
 
   const mealId = await Meal.findOne({
     where: { status: 'active', id: id },
-    include: [{ model: Restaurant }],
+    attributes: ['id', 'name', 'price', 'restaurantId', 'status'],
+    include: [
+      {
+        model: Restaurant,
+        attributes: ['id', 'name', 'address', 'rating', 'status'],
+      },
+    ],
   });
 
   res.status(201).json({
