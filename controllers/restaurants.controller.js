@@ -114,7 +114,6 @@ const updateReview = catchAsync(async (req, res, next) => {
   res.status(201).json({ status: 'success', review });
 });
 
-
 const deleteReview = catchAsync(async (req, res, next) => {
   const { review, sessionUser } = req;
 
@@ -123,7 +122,7 @@ const deleteReview = catchAsync(async (req, res, next) => {
   } else {
     return next(new AppError('not the author of the review', 400));
   }
-  
+
   res.status(201).json({ status: 'success', review });
 });
 

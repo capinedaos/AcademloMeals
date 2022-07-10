@@ -1,8 +1,6 @@
 // Models
 const { Order } = require('../models/order.model');
-const { User } = require('../models/user.model');
 const { Meal } = require('../models/meal.model');
-const { Restaurant } = require('../models/restaurant.model');
 const { AppError } = require('../utils/appError.util');
 
 // Utils
