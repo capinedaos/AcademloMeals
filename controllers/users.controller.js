@@ -74,6 +74,7 @@ const login = catchAsync(async (req, res, next) => {
 const getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({
     where: { status: 'active' },
+    attributes: ['id', 'name', 'email', 'status', 'role'],
   });
 
   res.status(201).json({
