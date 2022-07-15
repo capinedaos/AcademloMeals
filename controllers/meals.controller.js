@@ -31,6 +31,8 @@ const getAllMeals = catchAsync(async (req, res, next) => {
     include: [
       {
         model: Restaurant,
+        required: false,
+        where: { status: 'active' },
         attributes: ['id', 'name', 'address', 'rating', 'status'],
       },
     ],
@@ -53,6 +55,8 @@ const getAllMealById = catchAsync(async (req, res, next) => {
     include: [
       {
         model: Restaurant,
+        required: false,
+        where: { status: 'active' },
         attributes: ['id', 'name', 'address', 'rating', 'status'],
       },
     ],

@@ -39,10 +39,14 @@ const getAllOrders = catchAsync(async (req, res, next) => {
     include: [
       {
         model: Meal,
+        required: false,
+        where: { status: 'active' },
         attributes: ['id', 'name', 'price', 'restaurantId', 'status'],
         include: [
           {
             model: Restaurant,
+            required: false,
+            where: { status: 'active' },
             attributes: ['id', 'name', 'address', 'rating', 'status'],
           },
         ],
